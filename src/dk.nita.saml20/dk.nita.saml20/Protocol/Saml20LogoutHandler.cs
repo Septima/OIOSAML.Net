@@ -276,6 +276,12 @@ namespace dk.nita.saml20.protocol
 
             request.SubjectToLogOut.Format = Saml20PrincipalCache.GetSaml20AssertionLite().Subject.Format;
 
+            // See if the "ReturnUrl" - parameter is set.
+            string returnUrl = context.Request.QueryString["ReturnUrl"];
+            // If PreventOpenRedirectAttack has been enabled ... the return URL is only set if the URL is local.
+            if (!string.IsNullOrEmpty(returnUrl) && (!FederationConfig.GetConfig().PreventOpenRedirectAttack || IsLocalUrl(returnUrl)))
+                SessionStore.CurrentSession[SessionConstants.RedirectUrl] = returnUrl;
+
             var shaHashingAlgorithm = SignatureProviderFactory.ValidateShaHashingAlgorithm(endpoint.ShaHashingAlgorithm);
             if (destination.Binding == SAMLBinding.POST)
             {
@@ -699,6 +705,26 @@ namespace dk.nita.saml20.protocol
                 Trace.TraceData(TraceEventType.Information, "Clearing all sessions related to user with id: " + userId);
                 SessionStore.AbandonAllSessions(userId);
                 Trace.TraceData(TraceEventType.Verbose, "Sessions cleared.");
+            }
+        }
+
+        /// <summary>
+        /// This method is used for preventing open redirect attacks.
+        /// </summary>
+        /// <param name="url">URL that is checked for being local or not.</param>
+        /// <returns>Returns true if URL is local. Empty or null strings are not considered as local URL's</returns>
+        private bool IsLocalUrl(string url)
+        {
+            if (string.IsNullOrEmpty(url))
+            {
+                return false;
+            }
+            else
+            {
+                return ((url[0] == '/' && (url.Length == 1 ||
+                                           (url[1] != '/' && url[1] != '\\'))) ||   // "/" or "/foo" but not "//" or "/\"
+                        (url.Length > 1 &&
+                         url[0] == '~' && url[1] == '/'));   // "~/" or "~/foo"
             }
         }
 
