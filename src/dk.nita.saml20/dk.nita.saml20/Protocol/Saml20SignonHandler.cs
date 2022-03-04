@@ -518,6 +518,16 @@ namespace dk.nita.saml20.protocol
             }
 
             Saml20Assertion assertion = new Saml20Assertion(elem, null, quirksMode);
+
+            if (assertion.IsExpired())
+            {
+                AuditLogging.logEntry(Direction.IN, Operation.AUTHNREQUEST_POST,
+                "Assertion expired, assertion: " + elem.OuterXml);
+
+                HandleError(context, Resources.AssertionExpired, 1);
+                return;
+            }
+
             assertion.Validate(DateTime.UtcNow);
 
             if (endp == null || endp.metadata == null)
@@ -555,7 +565,7 @@ namespace dk.nita.saml20.protocol
                 AuditLogging.logEntry(Direction.IN, Operation.AUTHNREQUEST_POST,
                 "Assertion expired, assertion: " + elem.OuterXml);
 
-                HandleError(context, Resources.AssertionExpired);
+                HandleError(context, Resources.AssertionExpired, 1);
                 return;
             }
 
