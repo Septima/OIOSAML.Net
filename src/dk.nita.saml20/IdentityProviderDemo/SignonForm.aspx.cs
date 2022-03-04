@@ -21,17 +21,23 @@ using System.Security.Cryptography.Xml;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using dk.nita.saml20.Specification;
+using System.Configuration;
 
 namespace IdentityProviderDemo
 {
     public partial class SignonForm : Page
     {
         private AuthnRequest request;
+        private int assertionTimeoutMinutes = 60;
 
         protected Dictionary<string, User> Users { get { return UserData.Users; } }
 
         protected override void OnInit(EventArgs e)
         {
+            var assertionTimeout = ConfigurationManager.AppSettings["AssertionTimeoutMinutes"];
+            if (assertionTimeout != null)
+                assertionTimeoutMinutes = Convert.ToInt32(assertionTimeout);
+
             request = Context.Session["authenticationrequest"] as AuthnRequest;
 
             if (request == null)
@@ -290,7 +296,7 @@ namespace IdentityProviderDemo
                 SubjectConfirmation subjectConfirmation = new SubjectConfirmation();
                 subjectConfirmation.Method = SubjectConfirmation.BEARER_METHOD;
                 subjectConfirmation.SubjectConfirmationData = new SubjectConfirmationData();
-                subjectConfirmation.SubjectConfirmationData.NotOnOrAfter = DateTime.Now.AddHours(1);
+                subjectConfirmation.SubjectConfirmationData.NotOnOrAfter = DateTime.Now.AddMinutes(assertionTimeoutMinutes);
                 subjectConfirmation.SubjectConfirmationData.Recipient = receiver;
 
                 NameID nameId = new NameID();
@@ -307,7 +313,7 @@ namespace IdentityProviderDemo
                 assertion.Conditions = new Conditions();
                 assertion.Conditions.Items = new List<ConditionAbstract>();
 
-                assertion.Conditions.NotOnOrAfter = DateTime.Now.AddHours(1);
+                assertion.Conditions.NotOnOrAfter = DateTime.Now.AddMinutes(assertionTimeoutMinutes);
 
                 AudienceRestriction audienceRestriction = new AudienceRestriction();
                 audienceRestriction.Audience = new List<string>();
