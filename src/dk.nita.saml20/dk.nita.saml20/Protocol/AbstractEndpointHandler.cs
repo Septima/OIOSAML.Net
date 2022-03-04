@@ -49,12 +49,20 @@ namespace dk.nita.saml20.protocol
         /// <param name="errorMessage">The error message.</param>
         /// <param name="overrideConfigSetting">if set to <c>true</c> [override config setting].</param>
         /// <param name="exceptionCreatorFunc"></param>
-        public void HandleError(HttpContext context, string errorMessage, bool overrideConfigSetting, Func<string, Saml20Exception> exceptionCreatorFunc)
+        /// <param name="overrideShowError">-1: use config setting, 0: do not show error, 1: show error</param>
+        public void HandleError(HttpContext context, string errorMessage, bool overrideConfigSetting, Func<string, Saml20Exception> exceptionCreatorFunc, int overrideShowError = -1)
         {
             Trace.TraceData(TraceEventType.Error, "Error: " + errorMessage);
 
             var showError = SAML20FederationConfig.GetConfig().ShowError;
             const string defaultMessage = "Unable to validate SAML message!";
+
+            // NK
+            showError =
+                overrideShowError == 0 ? false : 
+                overrideShowError == 1 ? true : 
+                showError;
+            // .
 
             if (!string.IsNullOrEmpty(ErrorBehaviour) && ErrorBehaviour.Equals(dk.nita.saml20.config.ErrorBehaviour.THROWEXCEPTION.ToString()))
             {
@@ -97,15 +105,16 @@ namespace dk.nita.saml20.protocol
             var errorMessage = string.Format(format, htmlEncodedArguments);
             HandleError(context, errorMessage, false, m => new Saml20Exception(m));
         }
-        
+
         /// <summary>
         /// Displays an error page.
         /// </summary>
         /// <param name="context">The current HTTP context.</param>
         /// <param name="errorMessage">The error message.</param>
-        public void HandleError(HttpContext context, string errorMessage)
+        /// <param name="overrideShowError"></param>
+        public void HandleError(HttpContext context, string errorMessage, int overrideShowError = -1)
         {
-            HandleError(context, errorMessage, false, m => new Saml20Exception(m));
+            HandleError(context, errorMessage, false, m => new Saml20Exception(m), overrideShowError);
         }
 
 
