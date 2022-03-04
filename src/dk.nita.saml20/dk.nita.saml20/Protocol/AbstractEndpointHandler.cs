@@ -57,12 +57,10 @@ namespace dk.nita.saml20.protocol
             var showError = SAML20FederationConfig.GetConfig().ShowError;
             const string defaultMessage = "Unable to validate SAML message!";
 
-            // NK
             showError =
                 overrideShowError == 0 ? false : 
                 overrideShowError == 1 ? true : 
                 showError;
-            // .
 
             if (!string.IsNullOrEmpty(ErrorBehaviour) && ErrorBehaviour.Equals(dk.nita.saml20.config.ErrorBehaviour.THROWEXCEPTION.ToString()))
             {
