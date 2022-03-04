@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.Security.Cryptography.X509Certificates;
 using System.Xml.Serialization;
 using dk.nita.saml20.Session;
+using Trace = dk.nita.saml20.Utils.Trace;
 
 namespace dk.nita.saml20.config
 {
@@ -164,6 +166,19 @@ namespace dk.nita.saml20.config
         {
             get { return _allowedClockSkewMinutes; }
             set => _allowedClockSkewMinutes = value;
+        }
+
+
+        private bool _allowUnsecureSessionCookie = false;
+
+        /// <summary>
+        /// Allow unsecure session cookie 
+        /// </summary>
+        [XmlElement(ElementName = "AllowUnsecureSessionCookie")]
+        public bool AllowUnsecureSessionCookie
+        {
+            get { return _allowUnsecureSessionCookie; }
+            set => _allowUnsecureSessionCookie = value;
         }
     }
 

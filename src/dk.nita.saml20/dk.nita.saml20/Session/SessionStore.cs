@@ -110,7 +110,7 @@ namespace dk.nita.saml20.Session
 
         private static void WriteSessionCookie()
         {
-            if (!HttpContext.Current.Request.IsSecureConnection)
+            if (!HttpContext.Current.Request.IsSecureConnection && !FederationConfig.GetConfig().AllowUnsecureSessionCookie)
             {
                 throw new Saml20Exception("The service provider must use https since session cookie is not allowed on a unsecure transport");
             }
@@ -121,14 +121,17 @@ namespace dk.nita.saml20.Session
 
             var httpCookie = new HttpCookie(GetSessionCookieName(), sessionId.ToString())
             {
-                Secure = true,
-                HttpOnly = true,
+                Secure = !FederationConfig.GetConfig().AllowUnsecureSessionCookie,
+                HttpOnly = !FederationConfig.GetConfig().AllowUnsecureSessionCookie,
             };
 
-            var shouldSendSameSiteNoneCookie = BrowserSupportUtil.ShouldSendSameSiteNone(HttpContext.Current.Request.UserAgent);
-            if (shouldSendSameSiteNoneCookie)
+            if (!FederationConfig.GetConfig().AllowUnsecureSessionCookie)
             {
-                httpCookie.SameSite = SameSiteMode.None;
+                var shouldSendSameSiteNoneCookie = BrowserSupportUtil.ShouldSendSameSiteNone(HttpContext.Current.Request.UserAgent);
+                if (shouldSendSameSiteNoneCookie)
+                {
+                    httpCookie.SameSite = SameSiteMode.None;
+                }
             }
 
             HttpContext.Current.Response.Cookies.Add(httpCookie); // When a cookie is added to the response it is automatically added to the request. Thus, SessionId is available immeditly when reading cookies from the request.
