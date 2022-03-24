@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("dk.nita.saml20.ext.sessionstore.sqlserver")]
+[assembly: AssemblyTitle("Adjustment version 1")]
 [assembly: AssemblyDescription("This is a Sql Server implementation of the ISessionStoreProvider used in OIOSAML.NET (dk.nita.saml20)")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Digitaliseringsstyrelsen")]
