@@ -6,7 +6,7 @@ using System.Web.UI;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("dk.nita.saml20")]
+[assembly: AssemblyTitle("Adjustment version 1")]
 [assembly: AssemblyDescription("OIOSAML.NET is a. Net-based SAML 2.0 toolkit with a reference implementation that complies with the Danish OIOSAML 3.0 profile. The Toolkit can be used by service providers to be included in the joint public single sign-on federation services (NemLog-in).")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Digitaliseringsstyrelsen")]
