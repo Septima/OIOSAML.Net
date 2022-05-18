@@ -19,3 +19,8 @@
 ...
 <appSettings>
 ```
+
+### Version 1.1
+- Fix message content when assertion does not have the required Level of Assurance and always show this message
+
+

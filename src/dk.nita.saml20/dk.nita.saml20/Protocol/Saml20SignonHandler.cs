@@ -625,7 +625,7 @@ namespace dk.nita.saml20.protocol
                     var msgTemplate = demandedNsisLoa != null ?
                         Resources.NsisLoaTooLowAccordingToDemand :
                         Resources.NsisLoaTooLow;
-                    HandleLoaValidationError(msgTemplate, loa, demandedNsisLoa, context, assertionXml);
+                    HandleLoaValidationError(msgTemplate, loa, demandedNsisLoa ?? minLoa, context, assertionXml);
                     return false;
                 default:
                     return true;
