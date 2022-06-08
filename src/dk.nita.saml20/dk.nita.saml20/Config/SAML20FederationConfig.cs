@@ -136,6 +136,19 @@ namespace dk.nita.saml20.config
             set { _minimumNsisLoa = value; }
         }
 
+        // default to Substantial. Cooresponds to certificate level in the OIOSAML specification.
+        private string _minimumNsisLoaViolatedRedirectUrl = "";
+
+        /// <summary>
+        /// Gets or sets the minimum NSIS level of assurance configuration (spec 3.0)
+        /// </summary>
+        [XmlElement(ElementName = "MinimumNsisLoaViolatedRedirectUrl")]
+        public string MinimumNsisLoaViolatedRedirectUrl
+        {
+            get { return _minimumNsisLoaViolatedRedirectUrl; }
+            set { _minimumNsisLoaViolatedRedirectUrl = value; }
+        }
+
 
         private IDPEndpoints _idpEndpoints;
 

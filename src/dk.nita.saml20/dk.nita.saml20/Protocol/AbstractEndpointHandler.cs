@@ -88,6 +88,10 @@ namespace dk.nita.saml20.protocol
             AuditLogging.logEntry(Direction.IN, Operation.AUTHNREQUEST_POST,
                 loaErrorMessage + " Assertion: " + assertionXml.OuterXml);
 
+            var minimumNsisLoaViolatedRedirectUrl = SAML20FederationConfig.GetConfig().MinimumNsisLoaViolatedRedirectUrl;
+            if (!string.IsNullOrEmpty(minimumNsisLoaViolatedRedirectUrl))
+                context.Response.Redirect(minimumNsisLoaViolatedRedirectUrl);
+
             //HandleError(context, loaErrorMessage, (m) => new Saml20NsisLoaException(m));
             HandleError(context, loaErrorMessage, false, (m) => new Saml20NsisLoaException(m), 1);
         }

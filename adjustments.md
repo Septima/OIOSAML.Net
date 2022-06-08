@@ -23,4 +23,13 @@
 ### Version 1.1
 - Fix message content when assertion does not have the required Level of Assurance and always show this message
 
+### Version 1.2
+- LoA too low stops execution in handler. Added redirect setting if LoA too low
+```xml
+<SAML20Federation ....>
+  <MinimumNsisLoaViolatedRedirectUrl>/loatoolow</MinimumNsisLoaViolatedRedirectUrl>  // default ""
+...
+<SAML20Federation>
+```
+
 
