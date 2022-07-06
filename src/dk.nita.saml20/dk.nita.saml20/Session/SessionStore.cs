@@ -121,17 +121,14 @@ namespace dk.nita.saml20.Session
 
             var httpCookie = new HttpCookie(GetSessionCookieName(), sessionId.ToString())
             {
-                Secure = !FederationConfig.GetConfig().AllowUnsecureSessionCookie,
-                HttpOnly = !FederationConfig.GetConfig().AllowUnsecureSessionCookie,
+                Secure = true,
+                HttpOnly = true,
             };
 
-            if (!FederationConfig.GetConfig().AllowUnsecureSessionCookie)
+            var shouldSendSameSiteNoneCookie = BrowserSupportUtil.ShouldSendSameSiteNone(HttpContext.Current.Request.UserAgent);
+            if (shouldSendSameSiteNoneCookie)
             {
-                var shouldSendSameSiteNoneCookie = BrowserSupportUtil.ShouldSendSameSiteNone(HttpContext.Current.Request.UserAgent);
-                if (shouldSendSameSiteNoneCookie)
-                {
-                    httpCookie.SameSite = SameSiteMode.None;
-                }
+                httpCookie.SameSite = SameSiteMode.None;
             }
 
             HttpContext.Current.Response.Cookies.Add(httpCookie); // When a cookie is added to the response it is automatically added to the request. Thus, SessionId is available immeditly when reading cookies from the request.

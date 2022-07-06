@@ -32,4 +32,7 @@
 <SAML20Federation>
 ```
 
+### Version 1.3
+- "Unsecure cookie" changes too harsh. Cookie settings now back to orginal implementation. Custom secure connection check remains.
+
 
